@@ -1,6 +1,6 @@
 
 
-<footer>#
+<footer style="background-color:#ecf0f1;">
     <div class="container-fluid">
         <div class="container">
             <div class="row">
