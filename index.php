@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OsAdminPanel</title>
-</head>
-<body>
-    
-</body>
-</html>
+<?php
+// Head Content
+include('config/head-content.php');    
+// Header Nav Links
+include('config/header.php');
+
+// Body Content should come from views folder
+include('views/index/index-body.php');
+
+// Footer
+include('config/footer.php');
+?>
