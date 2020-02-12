@@ -138,28 +138,6 @@ include('config/header.php');
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php   
     // Footer
     include('config/footer.php');
