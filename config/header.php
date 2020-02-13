@@ -9,15 +9,18 @@
 
   <!-- Navbar links -->
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
-    <ul class="navbar-nav">
+    <ul class="nav">
       <li class="nav-item">
         <a class="nav-link" href="index.php">Home</a>
       </li>
+    </ul>
+
+    <ul class="nav justify-content-end">
       <li class="nav-item">
-        <a class="nav-link" href="page/log-in.php?page=register">Register</a>
+        <a class="nav-link" href="page/index.php?page=register">Register</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="page/log-in.php?page=login">Log In</a>
+      <li class="nav-item active">
+        <a class="nav-link" href="page/index.php?page=login">Log In</a>
       </li>
     </ul>
   </div>

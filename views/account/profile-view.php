@@ -10,7 +10,9 @@
                     Nav Links
                 </div>
                 <div class="card-body">
-                    <img src="assets/images/userprofileimg." alt="">
+                    <ul class="nav flex-colmun">
+                        <li class="nav-item"><a class="nav-link" href=""></a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -30,7 +32,7 @@
                         Profile Information
                     </div>
                     <div class="card-body">
-                        <img src="assets/images/userprofileimg." alt="">
+                        
                     </div>
                 </div>
             </div>

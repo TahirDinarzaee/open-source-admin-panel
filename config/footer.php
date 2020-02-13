@@ -8,10 +8,10 @@
                 <div class="col-md-3">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link" href="page/index.php?page=cms&content=terms">Terms & Conditions</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
+                            <a class="nav-link" href="page/index.php?page=cms&content=privacy">Privacy Policy</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Link</a>
