@@ -17,10 +17,14 @@
 
     <ul class="nav justify-content-end">
       <li class="nav-item">
-        <a class="nav-link" href="page/index.php?page=register">Register</a>
+        <a class="nav-link" href="<?php echo $base_url?>page/index.php?page=register">Register</a>
       </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="page/index.php?page=login">Log In</a>
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo $base_url?>page/index.php?page=login">Log In</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" href="<?php echo $base_url?>account/index.php?content=profile&user=59955565">Account</a>
       </li>
     </ul>
   </div>
