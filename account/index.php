@@ -2,7 +2,14 @@
 <?php
 
 // Head Content
-include('../config/head-content.php');    
+include('../config/head-content.php');  
+if (isset($_SESSION['logged_in'])) {
+    
+}
+else{
+    // header('Location:'.$base_url.'index.php');
+}
+
 // Header Nav Links
 include('../config/header.php');
 ?>

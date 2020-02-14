@@ -7,10 +7,6 @@
   </ol>
 </div>
 
-
-
-
-
 <div class="container-fluid">
     <div class="container">
         <?php register(); ?>
@@ -19,7 +15,7 @@
                 <br>
                 <div class="card">
                     <div class="card-body">
-                        <form action="<?php echo $register ?>" method="POST">
+                        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']).'?page=register'; ?>" method="POST">
                             <div class="form-group">
                                 <label for="">Username</label>
                                 <input type="text" name="user_name" placeholder="Enter Here!" class="form-control" minlength="6">

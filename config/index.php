@@ -22,7 +22,6 @@ $servername 	= "localhost"; // <-- Dont Need to change this
 $username 		= "root"; // <-- Replace this username with the one you created in host panel
 $password 		= ""; // <-- Replace this password with the one you created in host panel
 $db				= "os_admin_panel"; // <-- Replace this DB name with the one you created in host panel
-$register    = htmlspecialchars($_SERVER['PHP_SELF']).'?page=register';
 
 // Create connection
 $conn 			= mysqli_connect($servername, $username, $password, $db); // <-- Dont Change any of this 
@@ -40,6 +39,7 @@ else{
         // } else {
         //     echo "Error creating database: " . mysqli_error($conn);
         // }
+
         // Create user Table 
         $query = "SELECT id FROM users";
         $result = mysqli_query($conn, $query);
@@ -52,8 +52,8 @@ else{
                 f_name VARCHAR(30) NOT NULL,
                 m_name VARCHAR(30) NOT NULL,
                 l_name VARCHAR(30) NOT NULL,
-                user_email VARCHAR(50) NOT NULL,
-                user_password VARCHAR(50) NOT NULL,
+                user_email VARCHAR(255) NOT NULL,
+                user_password VARCHAR(255) NOT NULL,
                 register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )";
 
@@ -63,7 +63,57 @@ else{
                     echo "Error creating table: " . mysqli_error($conn);
                 }
         }
+
+        // Create user Table 
+        $query = "SELECT id FROM cms_pages";
+        $result = mysqli_query($conn, $query);
+
+        if (empty($result)) {
+            $sql = "CREATE TABLE cms_pages (
+                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+                p_random_id INT(50),
+                p_name VARCHAR(255) NOT NULL,
+                p_slug VARCHAR(255) NOT NULL,
+                p_content TEXT NOT NULL,
+                date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )";
+
+                if (mysqli_query($conn, $sql)) {
+                    echo "Table 'cms_pages' created successfully";
+                } else {
+                    echo "Error creating table: " . mysqli_error($conn);
+                }
+        }
 }
+
+
+// Cms Page Links
+function cms_pages_urls()
+{
+    $conn = $GLOBALS['conn'];
+    $query = "SELECT * FROM cms_pages";
+    $result = mysqli_query($conn, $query);
+    while ($cms_page =  mysqli_fetch_assoc($result)) {
+
+        echo '
+            <li class="nav-item">
+                <a class="nav-link" href="page/index.php?page=cms&p='.$cms_page['p_random_id'].'">
+                '.$cms_page['p_name'].'
+                </a>
+            </li>
+        ';
+    }
+    echo'
+        <li class="nav-item">
+            <a class="nav-link" href="page/index.php?page=cms&p=contact">
+                Contact
+            </a>
+        </li>
+    ';
+}
+
+
+
 
 // Register Function
 function register()
@@ -83,7 +133,7 @@ function register()
         }
         else{
             // Check if user info available
-            $current_user = "SELECT * FROM `users` WHERE `u_name`='$user_name' AND `user_email`='$user_email'";
+            $current_user = "SELECT * FROM `users` WHERE `u_name`='$user_name' AND `u_email`='$user_email'";
             $current_user1 = mysqli_query($conn, $current_user);
             $current_rows = mysqli_num_rows($current_user1);
 
@@ -100,8 +150,8 @@ function register()
                             (
                                 `user_unique_id`,
                                 `u_name`,
-                                `user_email`,
-                                `user_password`
+                                `u_email`,
+                                `u_password`
 
                             ) 
                             VALUES(
@@ -126,6 +176,47 @@ function register()
     }
 }
 
+// Register Function
+function log_in()
+{
+    if (isset($_POST['log_in'])) {
+
+        $conn = $GLOBALS['conn'];
+
+        // Get the Values
+        $user_email         = filter_var(htmlspecialchars(trim($_POST['user_email'])), FILTER_SANITIZE_EMAIL);
+        $user_password      = filter_var(htmlspecialchars(trim($_POST['user_password'])), FILTER_SANITIZE_STRING);
+
+        if (empty($user_password) || empty($user_email)) {
+            echo '<p class="alert alert-danger">Password or Email is empty!</p>';
+        }
+        else{
+            // Check if user info available
+            $current_user = "SELECT * FROM `users` WHERE `u_email` = '$user_email'";
+            $current_user11 = mysqli_query($conn, $current_user);
+            $user_row = mysqli_fetch_array($current_user11);
+            echo $current_rows = mysqli_num_rows($current_user11);
+            echo password_verify($user_password, $user_row['u_password']);
+
+            if (password_verify($user_password, $user_row['u_password'])) {
+
+                $_SESSION['user_unique_id'] = $user_row['user_unique_id'];
+                $_SESSION['u_name'] = $user_row['u_name'];
+                $_SESSION['logged_in'] = true;
+
+                echo '<p class="alert alert-success">You have registered now.</p>';
+                header('Location:../account/index.php?content=profile&user='.$_SESSION['user_unique_id']);
+               
+            }
+
+            else {
+                echo '<p class="alert alert-danger">Oops something went wrong!</p>';
+            }
+            
+        }
+    }
+}
+
 // User Info to edit
 function user_info_edit()
 {
@@ -146,25 +237,115 @@ function user_info_edit()
         else{
             $user_info  = "SELECT * FROM `users` WHERE `user_unique_id`='$user_unique_id'";
             $user_info1 = mysqli_query($conn, $user_info);
-            $user = mysqli_fetch_array($user_info1);
-           
-            // if (!$user) {
-            //     echo '0';
-            // }
-            $u_name = $user['u_name'];
-            $f_name = $user['f_name'];
-            // return $m_name = $user['m_name'];
-            // return $l_name = $user['l_name'];
-            // return $u_email = $user['user_email'];
+            $user = mysqli_fetch_assoc($user_info1);
+            $GLOBALS['user'] = $user;
+        
+            if (isset($_POST['update_profile'])) {
+                // To Edit need to get the form values
+                $u_title = filter_var(htmlspecialchars(trim($_POST['u_title'])), FILTER_SANITIZE_STRING);
+                $f_name = filter_var(htmlspecialchars(trim($_POST['f_name'])), FILTER_SANITIZE_STRING);
+                $m_name = filter_var(htmlspecialchars(trim($_POST['m_name'])), FILTER_SANITIZE_STRING);
+                $l_name = filter_var(htmlspecialchars(trim($_POST['l_name'])), FILTER_SANITIZE_STRING);
+                $u_email = filter_var(htmlspecialchars(trim($_POST['u_email'])), FILTER_SANITIZE_STRING);
+                // update the user info
+                $update = "UPDATE `users` 
+                SET 
+                `u_title` = '$u_title',
+                `f_name` = '$f_name',
+                `m_name` = '$m_name',
+                `l_name` = '$l_name',
+                `u_email` = '$u_email'
+                WHERE
+                `user_unique_id` = $user_unique_id";
+                $update1 = mysqli_query($conn, $update);
+                if (!$update1) {
+                    echo '<p class="alert alert-danger">Failed!</p>';
+                }
+                else{
+                    echo '<p class="alert alert-success">Success!</p>';
+                }
+            }
         }
     }
-
-  
-
-    // To Edit need to get the form values
-
-    // update the user info
-
-
 }
+// Change Password
+function change_password()
+{
+    $conn = $GLOBALS['conn'];
+    // Get the user_unique_id Value
+    $user_unique_id = filter_var(htmlspecialchars(trim($_GET['user'])), FILTER_VALIDATE_INT);
+    if (empty($user_unique_id)) {
+        header('Location:'.$base_url.'index.php');
+    }
+    else{
+        // check id user unique id exist
+        $user = "SELECT `user_unique_id` FROM `users` WHERE `user_unique_id`='$user_unique_id'";
+        $user1 = mysqli_query($conn, $user);
+        $user_rows = mysqli_num_rows($user1);
+        if ($user_rows < 1) {
+            header('Location:'.$base_url.'index.php');
+        }
+        else{
+            if (isset($_POST['change_password'])) {
+                // To Edit need to get the form values
+                $u_password = filter_var(htmlspecialchars(trim($_POST['new_password'])), FILTER_SANITIZE_STRING);
+                $hashed_user_password	=   password_hash($u_password, PASSWORD_BCRYPT);
+                // update the user info
+                $update = "UPDATE `users` 
+                SET 
+                `u_password` = '$hashed_user_password'
+                WHERE
+                `user_unique_id` = $user_unique_id";
+                $update1 = mysqli_query($conn, $update);
+                if (!$update1) {
+                    echo '<p class="alert alert-danger">Failed!</p>';
+                }
+                else{
+                    echo '<p class="alert alert-success">Success!</p>';
+                }
+            }
+        }
+    }
+}
+
+// Change Email
+function change_email()
+{
+    $conn = $GLOBALS['conn'];
+    // Get the user_unique_id Value
+    $user_unique_id = filter_var(htmlspecialchars(trim($_GET['user'])), FILTER_VALIDATE_INT);
+    if (empty($user_unique_id)) {
+        header('Location:'.$base_url.'index.php');
+    }
+    else{
+        // check id user unique id exist
+        $user = "SELECT `user_unique_id` FROM `users` WHERE `user_unique_id`='$user_unique_id'";
+        $user1 = mysqli_query($conn, $user);
+        $user_rows = mysqli_num_rows($user1);
+        if ($user_rows < 1) {
+            header('Location:'.$base_url.'index.php');
+        }
+        else{
+            if (isset($_POST['change_email'])) {
+                // To Edit need to get the form values
+                $u_email = filter_var(htmlspecialchars(trim($_POST['new_email'])), FILTER_VALIDATE_EMAIL);
+                // update the user info
+                $update = "UPDATE `users` 
+                SET 
+                `u_email` = '$u_email'
+                WHERE
+                `user_unique_id` = '$user_unique_id' ";
+                $update1 = mysqli_query($conn, $update);
+                if (!$update1) {
+                    echo '<p class="alert alert-danger">Failed!</p>';
+                }
+                else{
+                    echo '<p class="alert alert-success">Success!</p>';
+                }
+            }
+        }
+    }
+}
+
+// Cms Page
 ?>

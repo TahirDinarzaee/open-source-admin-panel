@@ -24,8 +24,19 @@
       </li>
 
       <li class="nav-item">
-        <a class="nav-link" href="<?php echo $base_url?>account/index.php?content=profile&user=59955565">Account</a>
+        <a class="nav-link" href="<?php echo $base_url?>account/index.php?content=profile&user=813384">Account</a>
       </li>
     </ul>
   </div>
 </nav>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <br>
+      <div class="alert alert-info">
+        <h4>Header Banner</h4>
+      </div>
+    </div>
+  </div>
+</div>

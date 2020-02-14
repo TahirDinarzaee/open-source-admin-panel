@@ -5,58 +5,39 @@
         <div class="container">
             <div class="row">
                 <!-- CMS Pages  -->
-                <div class="col-md-3">
+                <div class="col-md-4">
+                    <h5>CMS Pages</h5>
                     <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="page/index.php?page=cms&content=terms">Terms & Conditions</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="page/index.php?page=cms&content=privacy">Privacy Policy</a>
-                        </li>
+                        <?php 
+                        // Cms Pages Function
+                        cms_pages_urls();
+                            
+                        ?>
                     </ul>
                 </div>
-                <!--  -->
-                <div class="col-md-3">
-                     <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                    </ul>
+                <div class="col-md-4">
+                    <h5>Address</h5>
+                    <p style="padding:0px; margin:0px;">123 Street</p>
+                    <p style="padding:0px; margin:0px;">City</p>
+                    <p style="padding:0px; margin:0px;">Country</p>
+                    <p style="padding:0px; margin:0px;">Post Code</p>
+                    <p style="padding:0px; margin:0px;">Email</p>
+                    <p style="padding:0px; margin:0px;">Phone</p>
                 </div>
-                <div class="col-md-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">Disabled</a>
-                        </li>
-                    </ul>
-                </div>
-                <div class="col-md-3">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link disabled" href="#">Disabled</a>
-                        </li>
-                    </ul>
+                <div class="col-md-4">
+                    <H5>Social Links</H5>
+                    <a href="" target="_blank">
+                        <span class="fa fa-twitter"></span>
+                    </a>
+                    <a href="" target="_blank">
+                        <span class="fa fa-instagram"></span>
+                    </a>
+                    <a href="" target="_blank">
+                        <span class="fa fa-linkedin"></span>
+                    </a>
+                    <a href="" target="_blank">
+                        <span class="fa fa-facebook"></span>
+                    </a>
                 </div>
             </div>
         </div>

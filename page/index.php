@@ -7,9 +7,10 @@ include('../config/header.php');
 
 <?php
 
-    if (isset($_GET['page']) && !empty($_GET['page'])) {
-        $page = filter_var(htmlspecialchars(trim($_GET['page'])), FILTER_SANITIZE_STRING);
-    }
+if (isset($_GET['page']) && !empty($_GET['page']) || isset($_GET['content']) && !empty($_GET['content'])) {
+    $page = filter_var(htmlspecialchars(trim($_GET['page'])), FILTER_SANITIZE_STRING);
+    //  $content = filter_var(htmlspecialchars(trim($_GET['content'])), FILTER_SANITIZE_STRING);
+}
 
 if ($page  == 'register') {
 // Registre Views
@@ -30,7 +31,6 @@ elseif ($page == 'contact') {
 }
 
 ?>
-
 
 <?php   
     // Footer
