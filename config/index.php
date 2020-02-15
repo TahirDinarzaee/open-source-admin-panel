@@ -1,4 +1,9 @@
 <?php
+// Atuhors of Os Admin Panel
+// Tahir Dinarzaee
+// Mirza Dinarzaee
+// Hammal Dinarzaee
+// 2020
 session_start();
 
 function session_history($http_client)
@@ -205,7 +210,7 @@ function cms_pages_urls()
 
 function  contact()
 {
-    
+
 }
 
 // Register Function
@@ -465,4 +470,10 @@ function change_email()
 }
 
 // Cms Page
+
+// Atuhors of Os Admin Panel
+// Tahir Dinarzaee
+// Mirza Dinarzaee
+// Hammal Dinarzaee
+// 2020
 ?>
