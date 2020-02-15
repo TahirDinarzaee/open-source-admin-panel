@@ -9,30 +9,25 @@ include('../config/header.php');
 
 if (isset($_GET['page']) && !empty($_GET['page']) || isset($_GET['content']) && !empty($_GET['content'])) {
     $page = filter_var(htmlspecialchars(trim($_GET['page'])), FILTER_SANITIZE_STRING);
-    
+    //  $content = filter_var(htmlspecialchars(trim($_GET['content'])), FILTER_SANITIZE_STRING);
 }
 
-if ($page  == 'register') {
+if ($page  == 'all') {
 // Registre Views
-include('../views/cms/register-view.php');
+include('../views/database-management/all-tables-view.php');
    # code...
 }
-elseif ($page  == 'login') {
+elseif ($page  == 'add') {
 // login Views
-include('../views/cms/login-view.php');
+include('../views/database-management/add-tables-view.php');
 }
-
-elseif ($page  == 'log-out') {
-// logout Views
-include('../views/cms/logout-view.php');
-}
-elseif ($page  == 'cms') {
+elseif ($page  == 'edit') {
     // CMS page view 
-    include('../views/cms/cms-view.php');
+    include('../views/database-management/edit-tables-view.php');
 }
-elseif ($page == 'contact') {
+elseif ($page == 'delete') {
     // Contact Page View
-    include('../views/cms/contact-view.php');
+    include('../views/database-management/delete-tables-view.php');
 }
 
 ?>

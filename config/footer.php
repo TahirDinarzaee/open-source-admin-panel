@@ -3,7 +3,7 @@
 <footer style="background-color:#ecf0f1;">
     <div class="container-fluid">
         <div class="container">
-            <div class="row">
+            <div class="row text-center">
                 <!-- CMS Pages  -->
                 <div class="col-md-4">
                     <h5>CMS Pages</h5>

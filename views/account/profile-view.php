@@ -20,15 +20,14 @@
                     <?php include('user-nav-links.php') ?>
                 </div>
             </div>
-        </div>
-            <div class="col-md-2">
-                <div class="card">
-                    <div class="card-body">
-                        <img width="100%" height="100%" class="img-responsive" src="assets/images/user-profile-img.png" alt="">
-                    </div>
+            <hr>
+            <div class="card">
+                <div class="card-body">
+                    <img width="100%" height="100%" class="img-responsive" src="assets/images/user-profile-img.png" alt="">
                 </div>
             </div>
-            <div class="col-md-7">
+        </div>
+            <div class="col-md-9">
                 <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']).'?content='.$_GET["content"].'&user='.$_GET['user']; ?>" method="POST">
                     <div class="card">
                         <div class="card-body">

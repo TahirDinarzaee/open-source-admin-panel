@@ -31,6 +31,12 @@ elseif ($_GET['content'] == 'notification_setting') {
 // Account Views
 include('../views/account/notification-setting-view.php');
 }
+elseif ($_GET['content'] == 'session-history') {
+// Session Views
+include('../views/account/log-in-history-view.php');
+}
+
+
 ?>
 
 

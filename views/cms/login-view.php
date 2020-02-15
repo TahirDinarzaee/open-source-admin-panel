@@ -1,3 +1,6 @@
+
+<?php session_check(); ?>
+
 <div class="container p0">
     <br>
     <ol class="breadcrumb">
