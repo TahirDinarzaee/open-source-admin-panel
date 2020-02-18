@@ -8,13 +8,9 @@
 // 2020
 
 // Head Content
-include('../config/head-content.php');  
-if (isset($_SESSION['logged_in'])) {
-    
-}
-else{
-    // header('Location:'.$base_url.'index.php');
-}
+include('../config/head-content.php');
+
+logged_off();
 
 // Header Nav Links
 include('../config/header.php');

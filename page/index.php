@@ -21,17 +21,21 @@ if (isset($_GET['page']) && !empty($_GET['page']) || isset($_GET['content']) && 
 
 if ($page  == 'register') {
 // Registre Views
+logged_in();
 include('../views/cms/register-view.php');
    # code...
 }
 elseif ($page  == 'login') {
+logged_in();
 // login Views
 include('../views/cms/login-view.php');
 }
 
 elseif ($page  == 'log-out') {
 // logout Views
+session_destroy();
 include('../views/cms/logout-view.php');
+redirect(1,'../index.php');
 }
 elseif ($page  == 'cms') {
     // CMS page view 

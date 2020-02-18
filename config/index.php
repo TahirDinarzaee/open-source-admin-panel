@@ -4,7 +4,25 @@
 // Mirza Dinarzaee
 // Hammal Dinarzaee
 // 2020
+
 session_start();
+function message($message, $type)
+{
+    echo '<a class="alert alert-'.$type.'">'.$message.'<a/>';
+}
+function set_cookie(){
+
+    if (isset($_POST['set_cookie'])) {
+        $_COOKIE['cookie_email'] = $cookie_email  = $__POST['u_email'];
+        $_COOKIE['cookie_password'] = $cookie_password   = $_SESSION['u_password'];
+        setcookie($cookie_email, $cookie_password, time() + (86400 * 30), "/"); // 86400 = 1 day
+    }
+}
+
+function destroy_cookie()
+{
+
+}
 
 function session_history($http_client)
 {
@@ -24,6 +42,19 @@ function session_history($http_client)
                 $user_ip = $_SESSION['user_ip'];
 
                 //  Ip Data
+                $user_geo_info  = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+                $city       = $user_geo_info['geoplugin_city'];
+                $region     = $user_geo_info['geoplugin_region'];
+                $country    = $user_geo_info['geoplugin_countryName'];
+                //$page_name  = $_SERVER['PHP_SELF'];
+                // $page_name    = 'post-full-details.php';
+
+                current_page($_SERVER['PHP_SELF']);
+                echo $current_page;
+                $insert_view  =   "INSERT INTO `session_history` (`ip`,`visitor_country`,`visitor_state`,`visitor_city`,`page_name`,`date_and_time`) 
+                            VALUES('$user_ip', '$country','$region','$city','$page_name','$date_and_time')";
+                $run_insert_view = mysqli_query($conn,$insert_view);
+                //echo $base_url;
                 // Insert  a record into session
 
                 // check if ip on banlist
@@ -43,14 +74,17 @@ function session_history($http_client)
 
 $base_url	= "http://localhost/startupprojects/completed_projects/git-project/open-source-admin-panel/"; // <-- Change this link for the site to work!
 // $base_url	= 'https://www.startupacquisition.com/'; // <-- Change this link for the site to work!
+if (!isset($_GET['step'])) {
+    # code...
 
-$servername 	= "localhost"; // <-- Dont Need to change this 
-$username 		= "root"; // <-- Replace this username with the one you created in host panel
-$password 		= ""; // <-- Replace this password with the one you created in host panel
-$db				= "os_admin_panel"; // <-- Replace this DB name with the one you created in host panel
+    $servername 	= "localhost"; // <-- Dont Need to change this 
+    $username 		= "root"; // <-- Replace this username with the one you created in host panel
+    $password 		= ""; // <-- Replace this password with the one you created in host panel
+    $db				= ""; // <-- Replace this DB name with the one you created in host panel
 
-// Create connection
-$conn 			= mysqli_connect($servername, $username, $password, $db); // <-- Dont Change any of this 
+    // Create connection
+    $conn 			= mysqli_connect($servername, $username, $password, $db); // <-- Dont Change any of this 
+    // $conn = $GLOBALS['conn'];
 
 // Check connection
 if (!$conn) {
@@ -58,115 +92,109 @@ if (!$conn) {
 }
 else{
     // Create database
-        // $sql = "CREATE DATABASE os_admin_panel";
-        // if (mysqli_query($conn, $sql)) {
-        //     echo "Database created successfully";
-        // } else {
-        //     echo "Error creating database: " . mysqli_error($conn);
-        // }
-
-        //Just Create a table and inert into table
-
-        // Create user Table 
-        $query = "SELECT id FROM users";
-        $result = mysqli_query($conn, $query);
-
-        if (empty($result)) {
-            $sql = "CREATE TABLE users(
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                user_unique_id INT(50),
-                u_role VARCHAR(50) NOT NULL,
-                u_name VARCHAR(50) NOT NULL,
-                f_name VARCHAR(30) NOT NULL,
-                m_name VARCHAR(30) NOT NULL,
-                l_name VARCHAR(30) NOT NULL,
-                u_email VARCHAR(255) NOT NULL,
-                u_city VARCHAR(255) NOT NULL,
-                u_country VARCHAR(255) NOT NULL,
-                u_address VARCHAR(255) NOT NULL,
-                u_password VARCHAR(255) NOT NULL,
-                register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )";
-
-                if (mysqli_query($conn, $sql)) {
-                    // Insert Dummer Data
-                    echo "Table 'users' created successfully";
-                } else {
-                    echo "Error creating table: " . mysqli_error($conn);
-                }
-        }
-
-        // Create user Table 
-        $query = "SELECT id FROM cms_pages";
-        $result = mysqli_query($conn, $query);
-
-        if (empty($result)) {
-            $sql = "CREATE TABLE cms_pages(
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                p_random_id INT(50),
-                p_name VARCHAR(255) NOT NULL,
-                p_slug VARCHAR(255) NOT NULL,
-                p_content TEXT NOT NULL,
-                date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                date_edited TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )";
-
-                if (mysqli_query($conn, $sql)) {
-                    // Insert Dummer Data
-                    echo "Table 'cms_pages' created successfully";
-                } else {
-                    // echo "Error creating table: " . mysqli_error($conn);
-                }
-        }
-
-
-        // Create user Table 
-        $query = "SELECT id FROM session_history";
-        $result = mysqli_query($conn, $query);
-
-        if (empty($result)) {
-            $sql = "CREATE TABLE session_history(
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                session_token INT(50),
-                user_unique_id INT(50),
-                user_ip VARCHAR(255) NOT NULL,
-                country VARCHAR(255) NOT NULL,
-                city VARCHAR(255) NOT NULL,
-                logged_in VARCHAR(255) NOT NULL,
-                date_and_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )";
-
-                if (mysqli_query($conn, $sql)) {
-                    echo "Table 'session_history' created successfully";
-                } else {
-                    // echo "Error creating table: " . mysqli_error($conn);
-                }
-        }
-
-        // Create user Table 
-        $query = "SELECT id FROM banned_ip ";
-        $result = mysqli_query($conn, $query);
-
-        if (empty($result)) {
-            $sql = "CREATE TABLE banned_ip(
-                id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-                ip VARCHAR(50),
-                ban_reason VARCHAR(255) NOT NULL
-                date_and_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )";
-
-                if (mysqli_query($conn, $sql)) {
-                    echo "Table 'banned_ip' created successfully";
-                } else {
-                    // echo "Error creating table: " . mysqli_error($conn);
-                }
-        }
+    // $sql = "CREATE DATABASE os_admin_panel";
+    // if (mysqli_query($conn, $sql)) {
+    //     echo "Database created successfully";
+    // } else {
+    //     echo "Error creating database: " . mysqli_error($conn);
+    // }
+}
 }
 
-function session_check()
+
+
+
+
+function creat_table($table_name)
+{
+    $conn = $GLOBALS['conn'];
+    // Check if Table  exists
+    $query = "SELECT id FROM '$table_name' ";
+    $result = mysqli_query($conn, $query);
+
+    if (empty($result)) {
+        $sql = "CREATE TABLE '$table_name'(
+        id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        colu VARCHAR(50),
+        date_and_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )";
+        if (mysqli_query($conn, $sql)) {
+            echo "Table 'table_name' created successfully";
+        } else {
+            // echo "Error creating table: " . mysqli_error($conn);
+        }
+    }   
+}
+
+function drop_table($table_name)
+{
+    $conn = $GLOBALS['conn'];
+    $sql = "DROP TABLE $table_name";
+
+    // Delet Query for Table 
+
+    if (mysqli_query($conn, $sql)) {
+        echo "Table '$table_name' dropped successfully";
+    } else {
+        // echo "Error creating table: " . mysqli_error($conn);
+    }
+}
+
+function add_column($col_name,$table_name,$data_type,$data_length)
+{
+    $conn = $GLOBALS['conn'];
+    // Check if table Exist
+    $query = "SELECT table_name FROM 'tables'";
+    $result = mysqli_query($conn, $query);
+
+    if (!empty($result)) {
+        $sql = "ALTER TABLE $table_name
+        ADD $col_name $data_type($data_length);
+        ";
+
+        if (mysqli_query($conn, $sql)) {
+            echo "Table '$col_name' created successfully";
+        } else {
+            echo "Error creating Column: " . mysqli_error($conn);
+        }
+    } 
+    else{
+        message('Opps Something went wrong! try again!', 'danger');
+    }  
+}
+
+function drop_column($col_name,$table_name)
+{
+    $conn = $GLOBALS['conn'];
+
+    // Delete Query for Columns
+
+    $sql = "ALTER TABLE $table_name
+    DROP COLUMN $col_name;
+    ";
+
+    if (mysqli_query($conn, $sql)) {
+        echo "Table '$col_name' dropped successfully";
+    } else {
+        // echo "Error creating table: " . mysqli_error($conn);
+    }
+}
+
+function logged_off()
+{
+    if (!isset($_SESSION['logged_in'])) {
+        redirect(0,'../index.php');
+    }
+    else{
+    }
+}
+
+function logged_in()
 {
     if (isset($_SESSION['logged_in'])) {
-       return  redirect(0,'../index.php');
+        redirect(0,'account/index.php');
+    }
+    else{
     }
 }
 
@@ -177,7 +205,6 @@ function current_page()
     $current_page = $parts[count($parts) - 1];
     $GLOBALS['current_page'] = $current_page;
 }
-
 
 function redirect($delay,$url){
     header("Refresh:$delay; url=$url");
@@ -210,7 +237,6 @@ function cms_pages_urls()
 
 function  contact()
 {
-
 }
 
 // Register Function
@@ -305,6 +331,7 @@ function log_in()
 
                 $_SESSION['user_unique_id'] = $user_row['user_unique_id'];
                 $_SESSION['u_name'] = $user_row['u_name'];
+                $_SESSION['u_password'] = $_POST['user_password'];
                 $_SESSION['logged_in'] = true;
 
                 echo '<p class="alert alert-success">You have registered now.</p>';

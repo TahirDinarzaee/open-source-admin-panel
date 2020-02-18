@@ -14,6 +14,7 @@
             </div>
             <div class="col-md-6 text-center">
                 <h1>DOWNLOAD FREE NOW</h1>
+                <h1>mysqlAdmin</h1>
                 <p>
                     <a class="btn btn-info" href="https://github.com/TahirDinarzaee" target="blank">GitHub</a>
                     
