@@ -6,9 +6,18 @@
 // 2020
 
 session_start();
+
+function current_page($server_self)
+{
+    $currentFile = $server_self;
+    $parts = Explode('/', $currentFile);
+    $current_page = $parts[count($parts) - 1];
+     $GLOBALS['current_page'] = $current_page;
+}
+
 function message($message, $type)
 {
-    echo '<a class="alert alert-'.$type.'">'.$message.'<a/>';
+    echo '<div class="alert alert-'.$type.'">'.$message.'<div/>';
 }
 function set_cookie(){
 
@@ -23,64 +32,13 @@ function destroy_cookie()
 {
 
 }
-
-function session_history($http_client)
-{
-    // user session     ip
-    if (!empty($_SERVER["HTTP_CLIENT_IP"])){
-            //check for ip from share internet
-        $user_ip = $_SERVER["HTTP_CLIENT_IP"];
-        }
-        elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])){
-        // Check for the Proxy User
-        $user_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
-        }
-        else{
-        $user_ip = $_SERVER["REMOTE_ADDR"];
-        $_SESSION['user_ip'] = $user_ip;
-        if (!isset($_SESSION['user_ip']) && $_SESSION['logged_in']==false) {
-                $user_ip = $_SESSION['user_ip'];
-
-                //  Ip Data
-                $user_geo_info  = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
-                $city       = $user_geo_info['geoplugin_city'];
-                $region     = $user_geo_info['geoplugin_region'];
-                $country    = $user_geo_info['geoplugin_countryName'];
-                //$page_name  = $_SERVER['PHP_SELF'];
-                // $page_name    = 'post-full-details.php';
-
-                current_page($_SERVER['PHP_SELF']);
-                echo $current_page;
-                $insert_view  =   "INSERT INTO `session_history` (`ip`,`visitor_country`,`visitor_state`,`visitor_city`,`page_name`,`date_and_time`) 
-                            VALUES('$user_ip', '$country','$region','$city','$page_name','$date_and_time')";
-                $run_insert_view = mysqli_query($conn,$insert_view);
-                //echo $base_url;
-                // Insert  a record into session
-
-                // check if ip on banlist
-        }
-        else{
-                $user_ip = $_SESSION['user_ip'];
-                $user_unique_id = $_SESSION['user_unique_id'];
-                
-                //  Ip Data
-                // Insert  a record into session
-        }
-    }
-}
-
-  
-
-
-$base_url	= "http://localhost/startupprojects/completed_projects/git-project/open-source-admin-panel/"; // <-- Change this link for the site to work!
-// $base_url	= 'https://www.startupacquisition.com/'; // <-- Change this link for the site to work!
-if (!isset($_GET['step'])) {
-    # code...
+    $base_url	= "http://localhost/startupprojects/completed_projects/git-project/open-source-admin-panel/"; // <-- Change this link for the site to work!
+    // $base_url	= 'https://www.startupacquisition.com/'; // <-- Change this link for the site to work!
 
     $servername 	= "localhost"; // <-- Dont Need to change this 
     $username 		= "root"; // <-- Replace this username with the one you created in host panel
     $password 		= ""; // <-- Replace this password with the one you created in host panel
-    $db				= ""; // <-- Replace this DB name with the one you created in host panel
+    $db				= "os_admin_panel"; // <-- Replace this DB name with the one you created in host panel
 
     // Create connection
     $conn 			= mysqli_connect($servername, $username, $password, $db); // <-- Dont Change any of this 
@@ -99,10 +57,71 @@ else{
     //     echo "Error creating database: " . mysqli_error($conn);
     // }
 }
+
+function session_history()
+{
+    $conn = $GLOBALS['conn'];
+
+    // $current_page = $GLOBALS['current_page'];
+    // user session     ip
+    if (!empty($_SERVER["HTTP_CLIENT_IP"])){
+            //check for ip from share internet
+        $user_ip = $_SERVER["HTTP_CLIENT_IP"];
+        }
+        elseif (!empty($_SERVER["HTTP_X_FORWARDED_FOR"])){
+        // Check for the Proxy User
+        $user_ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+        }
+        else{
+            $user_ip = $_SERVER["REMOTE_ADDR"];
+            $_SESSION['user_ip'] = $user_ip;
+            $user_ip = $_SESSION['user_ip'];
+
+            //  Ip Data
+            $user_geo_info  = unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$user_ip"));
+            $city       = $user_geo_info['geoplugin_city'];
+            $region     = $user_geo_info['geoplugin_region'];
+            $country    = $user_geo_info['geoplugin_countryName'];
+
+        //    echo  $current_page = current_page($_SERVER['PHP_SELF']);
+         $currentFile = $_SERVER['PHP_SELF'];
+    $parts = Explode('/', $currentFile);
+    $current_page = $parts[count($parts) - 1];
+    // $GLOBALS['current_page'] = $current_page;
+    echo $_SERVER['DOCUMENT_ROOT'] ;
+
+            $date_and_time = date('d/m/Y H:m:i');
+
+            // check if ip on banlist
+
+            $banned_ip = "SELECT * FROM `banned_ip` WHERE `user_ip`='$user_ip";
+            $banned_ip1 = mysqli_query($conn, $banned_ip);
+            // $banned_ip_rows = mysqli_num_rows($banned_ip1);
+            if ($banned_ip1) {
+                    message('Sorry ur ip is on our banned list','danger');
+                    header("location:javascript://history.go(-1)");
+            }
+            else{
+                if (isset($_SESSION['logged_in'])) {
+                    $user_unique_id = $_SESSION['user_unique_id'];
+                    $logged_in = 1;
+                        $insert_view  =   "INSERT INTO `session_history` (`user_unique_id`, `logged_in`, `user_ip`, `country`,`city`,`url_path`,`date_and_time`) 
+                        VALUES('$user_unique_id', '$logged_in', '$user_ip', '$country', '$city', '$currentFile','$date_and_time')";
+                        $run_insert_view = mysqli_query($conn, $insert_view);
+                }
+                else{
+                    $user_unique_id = 0;
+                    $logged_in = 0;
+
+                        $insert_view  =   "INSERT INTO `session_history` (`user_unique_id`, `logged_in`, `user_ip`,`country`,`city`,`url_path`,`date_and_time`) 
+                        VALUES('$user_unique_id', '$logged_in', '$user_ip', '$country', '$city', '$currentFile','$date_and_time')";
+                        $run_insert_view = mysqli_query($conn, $insert_view);
+                }
+            }
+    }
 }
 
-
-
+session_history();
 
 
 function creat_table($table_name)
@@ -140,7 +159,7 @@ function drop_table($table_name)
     }
 }
 
-function add_column($col_name,$table_name,$data_type,$data_length)
+function add_column_alter_table($col_name,$table_name,$data_type,$data_length)
 {
     $conn = $GLOBALS['conn'];
     // Check if table Exist
@@ -163,7 +182,7 @@ function add_column($col_name,$table_name,$data_type,$data_length)
     }  
 }
 
-function drop_column($col_name,$table_name)
+function drop_column_alter_table($col_name,$table_name)
 {
     $conn = $GLOBALS['conn'];
 
@@ -198,14 +217,6 @@ function logged_in()
     }
 }
 
-function current_page()
-{
-    $currentFile = $_SERVER["PHP_SELF"];
-    $parts = Explode('/', $currentFile);
-    $current_page = $parts[count($parts) - 1];
-    $GLOBALS['current_page'] = $current_page;
-}
-
 function redirect($delay,$url){
     header("Refresh:$delay; url=$url");
 }
@@ -216,15 +227,17 @@ function cms_pages_urls()
     $conn = $GLOBALS['conn'];
     $query = "SELECT * FROM cms_pages";
     $result = mysqli_query($conn, $query);
-    while ($cms_page =  mysqli_fetch_assoc($result)) {
+    if ($result) {
+        while ($cms_page =  mysqli_fetch_assoc($result)) {
 
-        echo '
-            <li class="nav-item">
-                <a class="nav-link" href="page/index.php?page=cms&p='.$cms_page['p_random_id'].'">
-                '.$cms_page['p_name'].'
-                </a>
-            </li>
-        ';
+            echo '
+                <li class="nav-item">
+                    <a class="nav-link" href="page/index.php?page=cms&p='.$cms_page['p_random_id'].'">
+                    '.$cms_page['p_name'].'
+                    </a>
+                </li>
+            ';
+        }
     }
     echo'
         <li class="nav-item">

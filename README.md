@@ -20,10 +20,12 @@ osap/config/index.php
 To add your BASE URL on the same config/index.php file on line 75 add your BASE URL
 I.E $base_url = 'https://www.yoursitename.com/osap';
 
-Step 5
+Step 4
 Create Default tables
 Now locate the install.php file in this path
 osap/install.php and follow the steps
+
+once this step is completed the install.php will be deleted permenantly and is a non reversable action.
 
 Congrats 
 OSAP is ready to use yo can now use the Admin Panel to maintain you database and custom develop the application to suit your projects.
