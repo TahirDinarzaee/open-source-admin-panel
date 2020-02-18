@@ -13,12 +13,14 @@ Databse User
 User Password
 
 Step 3
-Add Database Credentials to Config file
+Add Database Credentials to Config file & Add BASE URL
 locate the config file in this path
 osap/config/index.php
 
+To add your BASE URL on the same config/index.php file on line 75 add your BASE URL
+I.E $base_url = 'https://www.yoursitename.com/osap';
 
-Step 4
+Step 5
 Create Default tables
 Now locate the install.php file in this path
 osap/install.php and follow the steps
